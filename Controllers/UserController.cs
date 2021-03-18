@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using WalletQ.DataAccess.Repositories;
 using WalletQ.Models;
 using WalletQ.DTOs.User;
-
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace WalletQ.Controllers
 {
@@ -28,11 +29,32 @@ namespace WalletQ.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
+
         public async Task<IActionResult> Get(Guid id)
         {
             User user = await _repository.Get(id);
             return Ok(user);
         }
+
+        [HttpGet("info")]
+        [Authorize]
+        public async Task<IActionResult> GetByToken()
+        {
+            var userId = Guid.Parse(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value);
+            User user = await _repository.getUser(userId);
+            UserDTO userDTO = new UserDTO
+            {
+                Name = user.Name,
+                Surname = user.Surname,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                DateOfBirth = user.DateOfBirth,
+                wallet =user.wallet
+            };
+            return Ok(userDTO);
+        }
+
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register(UserRegisterDTO userData)

@@ -9,6 +9,7 @@ namespace WalletQ.DataAccess.Repositories
     public interface IUserRepository : IRepository<User>
     {
         Task<bool> isEmailExists(string name);
+        Task<User> getUser(Guid id);
 
     }
 }
