@@ -8,7 +8,7 @@ namespace WalletQ.Models
     public class Transaction : BaseEntity
     {
         public uint Amount { get; set; }
-        public Guid SenderId { get; set; }
-        public Guid ReciverId { get; set; }
+        public User Sender { get; set; }
+        public User Reciver { get; set; }
     }
 }
