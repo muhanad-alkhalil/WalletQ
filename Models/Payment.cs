@@ -10,7 +10,7 @@ namespace WalletQ.Models
         public User creator { get; set; }
         public PaymentState paymentState { get; set; }
         public Transaction transaction { get; set; }
-        public int ValidationTime { get; set; }
+        public int validationTime { get; set; }
 
         public Payment()
         { 
