@@ -3,54 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WalletQ.DataAccess;
 
 namespace WalletQ.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210330063249_adding-payment-model")]
+    partial class addingpaymentmodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("WalletQ.Models.Payment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("amount")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid?>("creatorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("paymentState")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("transactionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("validationTime")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("creatorId");
-
-                    b.HasIndex("transactionId");
-
-                    b.ToTable("Payments");
-                });
 
             modelBuilder.Entity("WalletQ.Models.Transaction", b =>
                 {
@@ -138,21 +107,6 @@ namespace WalletQ.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Wallets");
-                });
-
-            modelBuilder.Entity("WalletQ.Models.Payment", b =>
-                {
-                    b.HasOne("WalletQ.Models.User", "creator")
-                        .WithMany()
-                        .HasForeignKey("creatorId");
-
-                    b.HasOne("WalletQ.Models.Transaction", "transaction")
-                        .WithMany()
-                        .HasForeignKey("transactionId");
-
-                    b.Navigation("creator");
-
-                    b.Navigation("transaction");
                 });
 
             modelBuilder.Entity("WalletQ.Models.Transaction", b =>

@@ -13,6 +13,7 @@ namespace WalletQ.DataAccess
             public DbSet<Wallet> Wallets { get; set; } 
             public DbSet<User> Users { get; set; }
             public DbSet<Transaction> Transactions { get; set; }
+            public DbSet<Payment> Payments { get; set; }
 
 
     }

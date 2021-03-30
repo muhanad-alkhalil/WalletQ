@@ -8,9 +8,9 @@ namespace WalletQ.Services.PaymentService
 {
     interface IPaymentService
     {
-        public bool Create(Payment payment);
-        public bool Cancel(Payment payment);
-        public bool Update(Payment payment);
-        public bool Pay(Payment payment,User payer);
+        public Task<bool> Create(Payment payment);
+        public Task<bool> Cancel(Payment payment);
+        public Task<bool> Update(Payment payment);
+        public Task<bool> Pay(Payment payment,User payer);
     }
 }

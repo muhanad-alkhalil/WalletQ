@@ -12,6 +12,8 @@ namespace WalletQ.Models
         public Transaction transaction { get; set; }
         public int validationTime { get; set; }
 
+        public uint amount { get; set; }
+
         public Payment()
         { 
             paymentState = PaymentState.Pending;
