@@ -9,6 +9,7 @@ namespace WalletQ.DTOs.Payment
 {
     public class PaymentDTO
     {
+        public Guid Id { get; set; }
         public PaymentUserDTO creator { get; set; }
         public Guid WalletId { get; set; }
         public PaymentState paymentState { get; set; }

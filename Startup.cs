@@ -40,6 +40,7 @@ namespace WalletQ
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
 
             services.AddAutoMapper(typeof(Startup));
 

@@ -23,12 +23,18 @@ namespace WalletQ.Controllers
         private readonly IPaymentRepository _paymentRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly ITransactionRepository _transactionRepository;
 
-        public PaymentController(IPaymentRepository paymentRepository,IUserRepository userReposotary, IMapper mapper)
+        public PaymentController(
+            IPaymentRepository paymentRepository,
+            IUserRepository userReposotary, 
+            IMapper mapper,
+            ITransactionRepository transactionRepository)
         {
             this._paymentRepository = paymentRepository;
             this._userRepository = userReposotary;
             this._mapper = mapper;
+            this._transactionRepository = transactionRepository;
         }
 
 
@@ -88,6 +94,72 @@ namespace WalletQ.Controllers
             PaymentDTO returnPayment = _mapper.Map<PaymentDTO>(payment);
 
             return Ok(returnPayment);
+        }
+
+        [HttpPost("pay")]
+        public async Task<IActionResult> pay(PayDTO payDTO)
+        {
+            
+            var payment = await _paymentRepository.GetPayment(payDTO.paymentId);
+            if(payment is null)
+                return BadRequest("Payment was not found");
+
+            if(payment.amount > 10000)
+
+            switch (payment.paymentState)
+            {
+                case PaymentState.Paid:
+                    return BadRequest("this payment has been paid already!");
+                    break;
+
+                case PaymentState.Expired:
+                    return BadRequest("this payment is not valid any more");
+                    break;
+
+                case PaymentState.Cancelled:
+                    return BadRequest("the payment has been canceled by the payment issuer");
+                    break;
+            }
+
+            if (DateTime.Now > payment.CreatedAt.AddMinutes(payment.validationTime))
+            {
+                payment.paymentState = PaymentState.Expired;
+                _paymentRepository.Update(payment);
+                await _paymentRepository.Save();
+                return BadRequest("Payment time has been expired");
+            }
+
+            var payer = await _userRepository.getUser(Guid.Parse(User.Claims
+                                                                .Where(a => a.Type == ClaimTypes.NameIdentifier)
+                                                                .FirstOrDefault().Value));
+
+            if (payer.wallet.Balance < payment.amount)
+                return BadRequest("There is not enough balance");
+
+            Transaction transaction = new Transaction
+            {
+                Sender = payer,
+                Reciver = payment.creator,
+                Amount = payment.amount
+            };
+
+            _transactionRepository.Add(transaction);
+
+            var reciver = await _userRepository.getUser(payment.creator.Id);
+            payer.wallet.Balance -= payment.amount;
+            reciver.wallet.Balance += payment.amount;
+            _userRepository.Update(payer);
+            _userRepository.Update(reciver);
+            await _userRepository.Save();
+
+            payment.transaction = transaction;
+            payment.paymentState = PaymentState.Paid;
+            await _transactionRepository.Save();
+            _paymentRepository.Update(payment);
+            await _paymentRepository.Save();
+
+            return Ok("done");
+
         }
     }
 }
