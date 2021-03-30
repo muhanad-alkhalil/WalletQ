@@ -15,7 +15,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using WalletQ.DataAccess;
 using WalletQ.DataAccess.Repositories;
+using WalletQ.DataAccess.Repositories.PaymentRepository;
 using WalletQ.Models;
+using AutoMapper;
+
 
 namespace WalletQ
 {
@@ -36,7 +39,12 @@ namespace WalletQ
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddCors();
+
             
             services.AddControllers();
 

@@ -110,3 +110,5 @@ C:\Users\muhanad\Source\Repos\muhanad-alkhalil\WalletQ\obj\Debug\net5.0\ref\Wall
 C:\Users\muhanad\Source\Repos\muhanad-alkhalil\WalletQ\obj\Debug\net5.0\WalletQ.pdb
 C:\Users\muhanad\Source\Repos\muhanad-alkhalil\WalletQ\obj\Debug\net5.0\WalletQ.genruntimeconfig.cache
 C:\Users\muhanad\Source\Repos\muhanad-alkhalil\WalletQ\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\muhanad\Source\Repos\muhanad-alkhalil\WalletQ\bin\Debug\net5.0\AutoMapper.dll
+C:\Users\muhanad\Source\Repos\muhanad-alkhalil\WalletQ\bin\Debug\net5.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
