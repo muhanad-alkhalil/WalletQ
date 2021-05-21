@@ -17,6 +17,11 @@ namespace WalletQ.DataAccess.Repositories
             return await _context.Users.Where(x => x.Id == id).Include(x => x.wallet).FirstOrDefaultAsync();
         }
 
+        public async Task<User> getUserByWalletId(Guid id)
+        {
+            return await _context.Users.Where(x => x.wallet.Id == id).Include(x => x.wallet).FirstOrDefaultAsync();
+        }
+
         public async Task<bool> isEmailExists(string name)
         {
             if (await _context.Users.AnyAsync(x => x.Email == name))

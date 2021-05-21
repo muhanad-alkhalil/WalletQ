@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\muhanad\\Source\\Repos\\muhanad-alkhalil\\WalletQ\\WalletQ.csproj": {}
+    "C:\\Users\\muhanad\\source\\repos\\muhanad-alkhalil\\WalletQ\\WalletQ.csproj": {}
   },
   "projects": {
-    "C:\\Users\\muhanad\\Source\\Repos\\muhanad-alkhalil\\WalletQ\\WalletQ.csproj": {
+    "C:\\Users\\muhanad\\source\\repos\\muhanad-alkhalil\\WalletQ\\WalletQ.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\muhanad\\Source\\Repos\\muhanad-alkhalil\\WalletQ\\WalletQ.csproj",
+        "projectUniqueName": "C:\\Users\\muhanad\\source\\repos\\muhanad-alkhalil\\WalletQ\\WalletQ.csproj",
         "projectName": "WalletQ",
-        "projectPath": "C:\\Users\\muhanad\\Source\\Repos\\muhanad-alkhalil\\WalletQ\\WalletQ.csproj",
+        "projectPath": "C:\\Users\\muhanad\\source\\repos\\muhanad-alkhalil\\WalletQ\\WalletQ.csproj",
         "packagesPath": "C:\\Users\\muhanad\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\muhanad\\Source\\Repos\\muhanad-alkhalil\\WalletQ\\obj\\",
+        "outputPath": "C:\\Users\\muhanad\\source\\repos\\muhanad-alkhalil\\WalletQ\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",

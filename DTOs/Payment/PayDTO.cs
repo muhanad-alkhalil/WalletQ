@@ -7,7 +7,7 @@ namespace WalletQ.DTOs.Payment
 {
     public class PayDTO
     {
-        public Guid paymentId { get; set; }
+        public string paymentId { get; set; }
         public string Password { get; set; }
     }
 }

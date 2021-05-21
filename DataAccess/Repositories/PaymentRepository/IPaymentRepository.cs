@@ -9,5 +9,7 @@ namespace WalletQ.DataAccess.Repositories.PaymentRepository
     public interface IPaymentRepository : IRepository<Payment>
     {
         Task<Payment> GetPayment(Guid id);
+        Task<IEnumerable<Payment>> GetAllPayment(int page,Guid id);
+        Task<int> PaymentsCount(Guid id);
     }
 }

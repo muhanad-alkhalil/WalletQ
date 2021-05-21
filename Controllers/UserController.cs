@@ -8,6 +8,7 @@ using WalletQ.Models;
 using WalletQ.DTOs.User;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Cors;
 
 namespace WalletQ.Controllers
 {
@@ -28,13 +29,25 @@ namespace WalletQ.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("wallet/{id}")]
         [Authorize]
 
-        public async Task<IActionResult> Get(Guid id)
+        public async Task<IActionResult> Get(string id)
         {
-            User user = await _repository.Get(id);
-            return Ok(user);
+            Guid reciverId;
+            if (!Guid.TryParse(id, out reciverId))
+            {
+                return BadRequest("Please Enter valid user id");
+            }
+
+            User user = await _repository.getUserByWalletId(reciverId);
+
+            if (user is null)
+            {
+                return BadRequest("User did not found");
+            }
+
+            return Ok(new {name = user.Name + " " + user.Surname });
         }
 
         [HttpGet("info")]

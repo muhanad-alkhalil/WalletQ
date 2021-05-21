@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dDUkJ5zCGUeHXCQmuk+TTQP2H4NZMGiVLaZjENWpDCwg+rH3XSE1Q6RLnIf/m67k4RTSM/DxYdxVgxMj/S6mRw==",
+  "dgSpecHash": "JJy25U+dolws06NwyvUREHMkFJV63OktRqd1ofsq36D19TVjpR3nptSwadp92HP6VesnHJ72GaTHcfNpYbbAxA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\muhanad\\Source\\Repos\\muhanad-alkhalil\\WalletQ\\WalletQ.csproj",
+  "projectFilePath": "C:\\Users\\muhanad\\source\\repos\\muhanad-alkhalil\\WalletQ\\WalletQ.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\muhanad\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\muhanad\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\8.1.1\\automapper.extensions.microsoft.dependencyinjection.8.1.1.nupkg.sha512",

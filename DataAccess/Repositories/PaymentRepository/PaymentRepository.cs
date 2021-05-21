@@ -11,6 +11,16 @@ namespace WalletQ.DataAccess.Repositories.PaymentRepository
     {
         public PaymentRepository(DataContext context) : base(context) { }
 
+        public async Task<IEnumerable<Payment>> GetAllPayment(int page, Guid id)
+        {
+            return await _context.Payments
+                .Where(p => p.creator.Id == id)
+                .Include(p => p.transaction)
+                .Skip(10 * (page-1))
+                .Take(10)
+                .ToListAsync();
+        }
+
         public async Task<Payment> GetPayment(Guid id)
         {
             return await _context.Payments.Where(x => x.Id == id)
@@ -20,5 +30,11 @@ namespace WalletQ.DataAccess.Repositories.PaymentRepository
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<int> PaymentsCount(Guid id)
+        {
+            return await _context.Payments
+                .Where(p => p.creator.Id == id)
+                .CountAsync();
+        }
     }
 }

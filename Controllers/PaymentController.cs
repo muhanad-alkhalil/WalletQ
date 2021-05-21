@@ -64,13 +64,44 @@ namespace WalletQ.Controllers
             return Created($"api/payment/get/{payment.Id.ToString()}", returnPayment);
         }
 
+        [HttpGet("getAll/{page}")]
+        public async Task<IActionResult> getAll(int page)
+        {
+            var userId = Guid.Parse(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value);
+            var payments = await _paymentRepository.GetAllPayment(page, userId);
+            var total = await _paymentRepository.PaymentsCount(userId);
+
+            return Ok(new {payments = payments,total = total });
+        }
 
         [HttpGet("get/{paymentId}")]
-        public async Task<IActionResult> get(Guid paymentId)
+        public async Task<IActionResult> get(string paymentId)
         {
-            var payment = await _paymentRepository.GetPayment(paymentId);
+            Guid Id;
+
+            if (!Guid.TryParse(paymentId, out Id))
+            {
+                return BadRequest("Please Enter valid id");
+            }
+
+            var payment = await _paymentRepository.GetPayment(Id);
             if (payment is null)
                 return BadRequest("Payment was not found");
+
+            switch (payment.paymentState)
+            {
+                case PaymentState.Paid:
+                    return BadRequest("this payment has been paid already!");
+                    break;
+
+                case PaymentState.Expired:
+                    return BadRequest("this payment is not valid any more");
+                    break;
+
+                case PaymentState.Cancelled:
+                    return BadRequest("the payment has been canceled by the payment issuer");
+                    break;
+            }
 
             PaymentDTO returnPayment = _mapper.Map<PaymentDTO>(payment);
 
@@ -99,12 +130,18 @@ namespace WalletQ.Controllers
         [HttpPost("pay")]
         public async Task<IActionResult> pay(PayDTO payDTO)
         {
-            
-            var payment = await _paymentRepository.GetPayment(payDTO.paymentId);
+            Guid Id;
+
+            if (!Guid.TryParse(payDTO.paymentId, out Id))
+            {
+                return BadRequest("Please Enter valid id");
+            }
+
+            var payment = await _paymentRepository.GetPayment(Id);
             if(payment is null)
                 return BadRequest("Payment was not found");
 
-            if(payment.amount > 10000)
+
 
             switch (payment.paymentState)
             {
@@ -133,6 +170,17 @@ namespace WalletQ.Controllers
                                                                 .Where(a => a.Type == ClaimTypes.NameIdentifier)
                                                                 .FirstOrDefault().Value));
 
+            if(payer.Id == payment.creator.Id)
+                return BadRequest("you canot pay to your self!");
+
+
+            if (payment.amount > 10000)
+            {
+                if (string.IsNullOrEmpty(payDTO.Password) || !VerfyPasswordHash(payDTO.Password, payer.PasswordHash, payer.PasswordSalt))
+                    return BadRequest("the password verification filled!"); ;
+            }
+                
+
             if (payer.wallet.Balance < payment.amount)
                 return BadRequest("There is not enough balance");
 
@@ -145,21 +193,33 @@ namespace WalletQ.Controllers
 
             _transactionRepository.Add(transaction);
 
-            var reciver = await _userRepository.getUser(payment.creator.Id);
+            var reciver = payment.creator;
             payer.wallet.Balance -= payment.amount;
             reciver.wallet.Balance += payment.amount;
             _userRepository.Update(payer);
             _userRepository.Update(reciver);
-            await _userRepository.Save();
 
             payment.transaction = transaction;
             payment.paymentState = PaymentState.Paid;
-            await _transactionRepository.Save();
+
             _paymentRepository.Update(payment);
             await _paymentRepository.Save();
 
-            return Ok("done");
+            return Ok(new { message = "done" });
 
+        }
+        private bool VerfyPasswordHash(string Password, byte[] PasswordHash, byte[] PassWordSalt)
+        {
+            using (var Hmac = new System.Security.Cryptography.HMACSHA512(PassWordSalt))
+            {
+                var computedHash = Hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(Password));
+                for (int i = 0; i < computedHash.Length; i++)
+                {
+                    if (computedHash[i] != PasswordHash[i])
+                        return false;
+                }
+                return true;
+            }
         }
     }
 }
