@@ -29,6 +29,12 @@ namespace WalletQ.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginDTO userData)
         {
+            if (userData.Email == null)
+            {
+                return Unauthorized("Please enter an email address");
+            }
+
+
             var user = await _repository.Login(userData);
 
             if (user == null)

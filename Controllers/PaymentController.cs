@@ -115,7 +115,15 @@ namespace WalletQ.Controllers
             if (payment is null)
                 return BadRequest("Payment was not found");
 
-            if(payment.paymentState != PaymentState.Pending)
+            if (DateTime.Now > payment.CreatedAt.AddMinutes(payment.validationTime))
+            {
+                payment.paymentState = PaymentState.Expired;
+                _paymentRepository.Update(payment);
+                await _paymentRepository.Save();
+                return BadRequest("The Payment is expired");
+            }
+
+            if (payment.paymentState != PaymentState.Pending)
                 return BadRequest("this payment can not be cancelled");
 
             payment.paymentState = PaymentState.Cancelled;

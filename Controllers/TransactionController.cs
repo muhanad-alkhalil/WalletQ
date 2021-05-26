@@ -25,6 +25,12 @@ namespace WalletQ.Controllers
             this._transactionRepository = transactionRepository;
             this._userRepository = userReposotary;
         }
+        [HttpGet("get/{id}")]
+        public async Task<IActionResult> get(Guid id)
+        {
+            var Transactions = await _transactionRepository.GetTransaction(id);
+            return Ok(Transactions);
+        }
 
         [HttpGet("getLastTrasnaction")]
         public async Task<IActionResult> GetLastTransactions()

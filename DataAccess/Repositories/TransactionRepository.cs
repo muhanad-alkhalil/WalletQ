@@ -22,5 +22,12 @@ namespace WalletQ.DataAccess.Repositories
                 .ToListAsync();
         }
 
+        public async Task<Transaction> GetTransaction(Guid id)
+        {
+            return await _context.Transactions
+                .Include(T => T.Sender)
+                .SingleOrDefaultAsync(T => T.Id == id);
+        }
+
     }
 }

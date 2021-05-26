@@ -15,6 +15,7 @@ namespace WalletQ.DataAccess.Repositories.PaymentRepository
         {
             return await _context.Payments
                 .Where(p => p.creator.Id == id)
+                .OrderByDescending(p => p.CreatedAt)
                 .Include(p => p.transaction)
                 .Skip(10 * (page-1))
                 .Take(10)

@@ -9,5 +9,7 @@ namespace WalletQ.DataAccess.Repositories
     public interface ITransactionRepository : IRepository<Transaction>
     {
         public Task<IEnumerable<Transaction>> GetLastTransactions(Guid id);
+        public Task<Transaction> GetTransaction(Guid id);
+
     }
 }
