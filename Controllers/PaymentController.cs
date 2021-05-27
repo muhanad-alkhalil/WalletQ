@@ -182,12 +182,11 @@ namespace WalletQ.Controllers
                 return BadRequest("you canot pay to your self!");
 
 
-            if (payment.amount > 10000)
-            {
-                if (string.IsNullOrEmpty(payDTO.Password) || !VerfyPasswordHash(payDTO.Password, payer.PasswordHash, payer.PasswordSalt))
-                    return BadRequest("the password verification filled!"); ;
-            }
-                
+            
+            if (string.IsNullOrEmpty(payDTO.Password) || !VerfyPasswordHash(payDTO.Password, payer.PasswordHash, payer.PasswordSalt))
+               return BadRequest("Authentication failed!");
+            
+               
 
             if (payer.wallet.Balance < payment.amount)
                 return BadRequest("There is not enough balance");

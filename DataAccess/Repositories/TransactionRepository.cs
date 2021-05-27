@@ -22,6 +22,24 @@ namespace WalletQ.DataAccess.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Transaction>> GetAllTransactions(int page, Guid id)
+        {
+            return await _context.Transactions
+                .Where(p => p.Sender.Id == id)
+                .OrderByDescending(p => p.CreatedAt)
+                .Include(p => p.Reciver)
+                .Skip(10 * (page - 1))
+                .Take(10)
+                .ToListAsync();
+        }
+
+        public async Task<int> TransactionsCount(Guid id)
+        {
+            return await _context.Transactions
+                .Where(p => p.Sender.Id == id)
+                .CountAsync();
+        }
+
         public async Task<Transaction> GetTransaction(Guid id)
         {
             return await _context.Transactions

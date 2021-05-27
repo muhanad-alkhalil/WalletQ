@@ -9,5 +9,7 @@ namespace WalletQ.DTOs.TransactionDTO
     {
         public string id { get; set; }
         public uint amount { get; set; }
+
+        public string password { get; set; }
     }
 }

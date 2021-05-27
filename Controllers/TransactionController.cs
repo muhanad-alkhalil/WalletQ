@@ -68,9 +68,25 @@ namespace WalletQ.Controllers
             return Ok(TransactionsDTO);
         }
 
+        [HttpGet("getAll/{page}")]
+        public async Task<IActionResult> getAll(int page)
+        {
+            var userId = Guid.Parse(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value);
+            var transactions = await _transactionRepository.GetAllTransactions(page, userId);
+            var total = await _transactionRepository.TransactionsCount(userId);
+
+            return Ok(new { transactions = transactions, total = total });
+        }
+
         [HttpPost("Create")]
         public async Task<IActionResult> Create(CreateTransactionDTO createTransactionDTO)
         {
+            var sender = await _userRepository.getUser(Guid.Parse(User.Claims
+                                                                .Where(a => a.Type == ClaimTypes.NameIdentifier)
+                                                                .FirstOrDefault().Value));
+
+            if (string.IsNullOrEmpty(createTransactionDTO.password) || !VerfyPasswordHash(createTransactionDTO.password, sender.PasswordHash, sender.PasswordSalt))
+                return BadRequest("Authentication failed!");
 
             if (createTransactionDTO.amount < 1)
                 return BadRequest("the amount should be more than 0");
@@ -120,7 +136,19 @@ namespace WalletQ.Controllers
             return Ok(new { message = "done" });
 
         }
-
+        private bool VerfyPasswordHash(string Password, byte[] PasswordHash, byte[] PassWordSalt)
+        {
+            using (var Hmac = new System.Security.Cryptography.HMACSHA512(PassWordSalt))
+            {
+                var computedHash = Hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(Password));
+                for (int i = 0; i < computedHash.Length; i++)
+                {
+                    if (computedHash[i] != PasswordHash[i])
+                        return false;
+                }
+                return true;
+            }
+        }
 
     }
 }

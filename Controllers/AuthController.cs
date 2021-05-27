@@ -54,7 +54,7 @@ namespace WalletQ.Controllers
             var TokenDesc = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddHours(3),
+                Expires = DateTime.Now.AddHours(24),
                 SigningCredentials = Creds
             };
 
