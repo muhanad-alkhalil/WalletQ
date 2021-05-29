@@ -72,10 +72,42 @@ namespace WalletQ.Controllers
         public async Task<IActionResult> getAll(int page)
         {
             var userId = Guid.Parse(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value);
-            var transactions = await _transactionRepository.GetAllTransactions(page, userId);
+            var Transactions = await _transactionRepository.GetAllTransactions(page, userId);
             var total = await _transactionRepository.TransactionsCount(userId);
 
-            return Ok(new { transactions = transactions, total = total });
+            Guid UserId = Guid.Parse(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier)
+                                               .FirstOrDefault().Value);
+
+            var TransactionsDTO = new List<TransactionDetailsDTO>();
+            foreach (var item in Transactions)
+            {
+                TransactionDetailsDTO plainDTO;
+                if (item.Sender.Id == UserId)
+                {
+                    plainDTO = new TransactionDetailsDTO
+                    {
+                        Id = item.Id,
+                        CreatedAt = item.CreatedAt,
+                        Type = "Send",
+                        With = item.Reciver.Name,
+                        Amount = item.Amount
+                    };
+                }
+                else
+                {
+                    plainDTO = new TransactionDetailsDTO
+                    {
+                        Id = item.Id,
+                        CreatedAt = item.CreatedAt,
+                        Type = "Recive",
+                        With = item.Sender.Name,
+                        Amount = item.Amount
+                    };
+                }
+                TransactionsDTO.Add(plainDTO);
+            }
+
+            return Ok(new { transactions = TransactionsDTO, total = total });
         }
 
         [HttpPost("Create")]

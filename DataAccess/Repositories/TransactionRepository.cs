@@ -27,10 +27,13 @@ namespace WalletQ.DataAccess.Repositories
             return await _context.Transactions
                 .Where(p => p.Sender.Id == id)
                 .OrderByDescending(p => p.CreatedAt)
-                .Include(p => p.Reciver)
                 .Skip(10 * (page - 1))
                 .Take(10)
+                .Include(p => p.Reciver)
+                .Include(T => T.Sender)
                 .ToListAsync();
+
+    
         }
 
         public async Task<int> TransactionsCount(Guid id)
